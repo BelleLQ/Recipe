@@ -1,0 +1,63 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load account socialaccount %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block accountcontent %}
+<div class="login-box">
+    <div class="lb-header">
+      <h3>Sign In</h3>
+    </div>
+
+{% get_providers as socialaccount_providers %}
+
+{% if socialaccount_providers %}
+<p style="margin-bottom: 0; text-align: center; ">{% blocktrans with site.name as site_name %}Haven't gotten an account yet? <a style="color:#1CB94E" href="{{ signup_url }}">Sign up</a>
+{% endblocktrans %}</p>
+<div class="socialaccount_ballot social-login" id="login-social">
+
+  <ul class="socialaccount_providers">
+    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+  </ul>
+
+</div>
+
+{% include "socialaccount/snippets/login_extra.html" %}
+
+{% else %}
+<p>{% blocktrans %}If you have not created an account yet, then please
+<a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+{% endif %}
+
+<form class="login email-login" method="POST" action="{% url 'account_login' %}" id="login_form">
+  {% csrf_token %}
+  {% for field in form %}
+        {% if not forloop.last %}
+        <div class="u-form-group">
+            {{ field.errors }}
+            {{ field.label_tag }}
+        </div>
+        <div class="u-form-group u-form-group-field">
+            {{ field }}
+        </div>
+        {% else %}
+            <div class="u-form-group u-form-group-remember">
+            {{ field.errors }}
+            {{ field }} {{ field.label_tag}}
+        </div>
+        {% endif %}
+    {% endfor %}
+  {% if redirect_field_value %}
+  <div class="u-form-group">
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  </div>
+  {% endif %}
+  <div class="u-form-group">
+  <button class="primaryAction" type="submit">{% trans "Sign In" %}</button>
+  </div>
+  <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+</form>
+</div>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load socialaccount %}
+
+{% block title %}My amazing blog{% endblock %}
+
+{% block content %}
+
+
+  <div class="login-box">
+    <div class="lb-header">
+      <a href="#" class="active" id="login-box-link">Login</a>
+      <a href="#" id="signup-box-link">Sign Up</a>
+    </div>
+    <div class="social-login" id="login-social">
+      <a href="{% provider_login_url 'facebook' method='oauth2' %}">
+        <i class="fa fa-facebook fa-lg"></i>
+        Login in with facebook
+      </a>
+      <a href="{% provider_login_url 'google' %}">
+        <i class="fa fa-google-plus fa-lg"></i>
+        log in with Google
+      </a>
+    </div>
+    <div class="social-login hidden" id="signup-social">
+      <a href="{% provider_login_url 'facebook' method='oauth2' %}">
+        <i class="fa fa-facebook fa-lg"></i>
+        Sign up with facebook
+      </a>
+      <a href="{% provider_login_url 'google' %}">
+        <i class="fa fa-google-plus fa-lg"></i>
+        Sign up with Google
+      </a>
+    </div>
+    <form class="email-login" method="POST" action="{% url 'account_login' %}">
+      {% csrf_token %}
+      <div class="u-form-group">
+        <input type="email" placeholder="Email"/>
+      </div>
+      <div class="u-form-group">
+        <input type="password" placeholder="Password"/>
+      </div>
+      <div class="u-form-group">
+        <button type="submit">Log in</button>
+      </div>
+      <div class="u-form-group">
+        <a href="#" class="forgot-password">Forgot password?</a>
+      </div>
+    </form>
+    <form class="email-signup" action="{% url 'account_signup' %}" method="POST">
+      {% csrf_token %}
+      <div class="u-form-group">
+        <input type="email" placeholder="Email"/>
+      </div>
+      <div class="u-form-group">
+        <input type="password" placeholder="Password"/>
+      </div>
+      <div class="u-form-group">
+        <input type="password" placeholder="Confirm Password"/>
+      </div>
+      <div class="u-form-group">
+        <button type="submit">Sign Up</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}

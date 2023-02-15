@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Delicious - Food Blog Template | Recipe{% endblock %}
+
+{% block content %}
+
+<!-- ##### Best recipe Area Start ##### -->
+<section class="best-recipe-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="section-heading">
+                    <h3>Recipes</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+
+            {% for recipe in recipes %}
+            <!-- Single Best Recipe Area -->
+            <div class="col-12 col-sm-6 col-lg-4">
+                <a href="recipe-post.html">
+                <div class="single-best-recipe-area mb-30">
+                    <img src={{recipe.recipe_img_url}} alt="">
+                    <div class="recipe-content">
+                            <h5>{{recipe.recipe_name}}</h5>
+                        <div class="ratings">
+                            {% for i in recipe.rating_range %}
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            {% endfor %}
+                            {% for i in recipe.empty_rating_range %}
+                            <i class="fa fa-star-o" aria-hidden="true"></i>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                </a>
+            </div>
+            <!-- Single Best Recipe Area End -->
+            {% endfor %}
+        </div>
+    </div>
+</section>
+    <!-- ##### Best recipe Area End ##### -->
+
+
+{% endblock %}
