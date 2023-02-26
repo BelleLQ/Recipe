@@ -1,6 +1,0 @@
-# Https
-cert.pem
-key.pem
-
-#env
-.env
