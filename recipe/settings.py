@@ -29,7 +29,8 @@ if platform.system() == 'Darwin':
     SECRET_KEY = config("SECRET_KEY")
 elif platform.system() == 'Linux':
     # AWS Parameter Store
-    ssm = boto3.client('ssm', region_name='eu-east-2')
+    ssm = boto3.client('ssm', region_name=config('AWS_REGION'), aws_access_key_id=config('AWS_ACCESS_KEY_ID'),
+                          aws_secret_access_key=config('AWS_SECRET_ACCESS_KEY'))
     SECRET_KEY = ssm.get_parameter(Name='SECRET_KEY', WithDecryption=True)['Parameter']['Value']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
