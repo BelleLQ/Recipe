@@ -14,7 +14,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 from decouple import config
-
+import platform
+import boto3
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,8 +25,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config("SECRET_KEY")
-
+if platform.system() == 'Darwin':
+    SECRET_KEY = config("SECRET_KEY")
+elif platform.system() == 'Linux':
+    # AWS Parameter Store
+    ssm = boto3.client('ssm', region_name='eu-east-2')
+    SECRET_KEY = ssm.get_parameter(Name='SECRET_KEY', WithDecryption=True)['Parameter']['Value']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -33,7 +38,6 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'recipe_app.apps.RecipeAppConfig',
     'django.contrib.admin',
@@ -98,17 +102,28 @@ WSGI_APPLICATION = 'recipe.wsgi.application'
 # }
 
 # MySQL db
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'recipe_schema',
-        'USER': config("MYSQL_USERNAME"),
-        'PASSWORD': config("MYSQL_PASSWORD"),
-        'HOST': config("MYSQL_HOST"),
-        'PORT': config("MYSQL_PORT"),
+if platform.system() == 'Darwin':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'recipe_schema',
+            'USER': config("MYSQL_USERNAME"),
+            'PASSWORD': config("MYSQL_PASSWORD"),
+            'HOST': config("MYSQL_HOST"),
+            'PORT': config("MYSQL_PORT"),
+        }
     }
-}
-
+elif platform.system() == 'Linux':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'recipe_schema',
+            'USER': ssm.get_parameter(Name='MYSQL_USERNAME', WithDecryption=True)['Parameter']['Value'],
+            'PASSWORD': ssm.get_parameter(Name='MYSQL_PASSWORD', WithDecryption=True)['Parameter']['Value'],
+            'HOST': ssm.get_parameter(Name='MYSQL_HOST', WithDecryption=True)['Parameter']['Value'],
+            'PORT': ssm.get_parameter(Name='MYSQL_PORT', WithDecryption=True)['Parameter']['Value'],
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -190,4 +205,4 @@ ACCOUNT_EMAIL_VERIFICATION = "none"
 #     },
 # }
 # Allow the app to be run on AWS EC2 (Public DNS name)
-ALLOWED_HOSTS=['ec2-18-118-49-96.us-east-2.compute.amazonaws.com', '18.118.49.96', 'recipe.bellelq.com']
+ALLOWED_HOSTS=['ec2-18-118-49-96.us-east-2.compute.amazonaws.com', '18.118.49.96', 'recipe.bellelq.com', 'localhost']
