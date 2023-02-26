@@ -189,4 +189,5 @@ ACCOUNT_EMAIL_VERIFICATION = "none"
 #         }
 #     },
 # }
-
+# Allow the app to be run on AWS EC2 (Public DNS name)
+ALLOWED_HOSTS=['ec2-18-118-49-96.us-east-2.compute.amazonaws.com', '18.118.49.96', 'recipe.bellelq.com']
