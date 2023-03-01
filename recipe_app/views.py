@@ -62,5 +62,5 @@ class RecipeView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def save(self, *args, **kwargs):
-        self.instance.created_by =  self.request.user
+        self.instance.created_by = self.request.user
         return super().save(*args, **kwargs)

@@ -2,7 +2,6 @@
 
 - Template Name: Delicious - Food Blog Template
 - Template Author: Colorlib
-- Template URL: colorlib.com
 - Version: 1.0.0
 
 */
@@ -363,6 +362,12 @@ textarea:focus {
     .delicious-btn {
       height: 40px;
       line-height: 39px; } }
+
+/* :: 0.0 Nav bar */
+.logo-img{
+    height: auto;
+    max-width: 200px;
+}
 
 /* :: 4.0 Search Wrapper */
 .search-wrapper {

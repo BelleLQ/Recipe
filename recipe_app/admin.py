@@ -5,6 +5,15 @@ from .models import *
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
+    fields = ('recipe_name',
+                  'prep_time_minute',
+                  'cook_time_minute',
+                  'yield_servings',
+                  'recipe_img_url',
+                  'rating',
+                  'difficulty_id',
+                  'diet_style_id',
+                  'category_id')
     pass
 
 
